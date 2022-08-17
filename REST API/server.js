@@ -30,6 +30,37 @@ app.get("/books/:id", (req, res) => {
     })
 })
 
+app.post("/books", (req, res) => {
+    const newBook = {
+        book_name : req.body.book_name,
+        book_type: req.body.book_type,
+        book_genre: req.body.book_genre,
+        book_completed: '0'
+    };
+
+    db.query('INSERT INTO BOOK SET ? ', newBook, function(error, rows, fields){
+        if(error) throw error;
+        return res.send("Insertion complete");
+    })
+
+})
+
+app.put('/books/:id', (req, res) => {
+    const updatedBook = {
+        id : req.params.id,
+        book_name : req.body.book_name,
+        book_type : req.body.book_type,
+        book_genre : req.body.book_genre,
+        book_completed : req.body.book_completed
+    }
+
+    db.query("UPDATE book SET ? WHERE id = ?", [updatedBook, updatedBook.id], function(error, rows, fields) {
+        if(error) throw error;
+
+        return res.send("Update Complete");
+    })
+})
+
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log('Listening on port: ' + port + '...'));
 
