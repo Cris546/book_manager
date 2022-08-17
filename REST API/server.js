@@ -35,7 +35,7 @@ app.post("/books", (req, res) => {
         book_name : req.body.book_name,
         book_type: req.body.book_type,
         book_genre: req.body.book_genre,
-        book_completed: '0'
+        book_completed: req.body.book_completed
     };
 
     db.query('INSERT INTO BOOK SET ? ', newBook, function(error, rows, fields){
@@ -60,6 +60,14 @@ app.put('/books/:id', (req, res) => {
         return res.send("Update Complete");
     })
 })
+
+app.delete('/books/:id', (req, res) => {
+    db.query("DELETE FROM book WHERE id = ?", req.params.id, function(error, rows, fields) {
+        if(error) throw error;
+        return res.send("Book deleted");
+    })
+})
+
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log('Listening on port: ' + port + '...'));
