@@ -4,16 +4,79 @@
 const URL = "http://localhost:8080/books/";
 
 function getData() {
-    fetch(URL)
+    const bookID = document.getElementById("bookId").value;
+    
+    fetch(URL + bookID)
     .then(res => {
         return res.json();
     })
     .then( data => {
         
         displayData(data);
+        
+        return data;
     })
     .catch(error => console.error(error));
 }
+
+function postData(){
+    
+    newBook = createBook();
+
+    fetch(URL, {
+        method: 'POST',
+        body: JSON.stringify(newBook),
+        headers: { 'Content-Type' : 'application/json'}
+    }).then(res => {
+        
+        return res.text;
+    }).then(data => {
+        console.log(data);
+    })
+    .catch(error => console.error(error));
+}
+
+function updateData(){
+    const currBook = createBook();
+    const bookID = document.getElementById("bookId").value;
+
+    fetch(URL + bookID, {
+        method: 'PUT',
+        body: JSON.stringify(currBook),
+        headers: {'Content-Type' : 'application/json'}
+    }).then(res => {
+        return res.text;
+    }).then(data => {
+        console.log(data);
+    })
+    .catch(error => console.error(error));
+
+
+}
+
+function deleteData(){
+    const bookID = document.getElementById("bookId").value;
+
+    fetch(URL + bookID, {
+        method: 'DELETE'
+    }).catch(error => console.error(error));
+}
+
+
+function createBook(){
+    
+    const newBook = {
+        book_name : document.getElementById("bookName").value,
+        book_type : document.getElementById("bookType").value,
+        book_genre : document.getElementById("bookGenre").value,
+        book_completed : document.getElementById("bookComp").value
+    };
+
+    return newBook;
+}
+
+
+
 
 
 function displayData(data){

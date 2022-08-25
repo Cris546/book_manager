@@ -20,7 +20,28 @@
         
 
     </table>
-    <button class="button-get" onclick="getData()">GET</button>
+    <div id="button-container">
+        <label for="bookId">Book ID:</label>
+        <input type="text" id="bookId">
+        
+
+        <label for="bookName">Book Name:</label>
+        <input type="text" id="bookName">
+        <label for="bookType">Book Type:</label>
+        <input type="text" id="bookType">
+        <label for="bookGenre">Book Genre:</label>
+        <input type="text" id="bookGenre">
+        <label for="bookComp">Book Completed:</label>
+        <input type="text" id="bookComp"><br>
+
+        <button class="button-get" onclick="getData()">GET</button>
+        <button id="button-post" onclick="postData()">POST</button>
+        <button id="button-put" onclick="updateData()">UPDATE</button>
+        <button id="button-delete" onclick="deleteData()">DELETE</button>
+
+
+    </div>
+    
 
 </body>
 <script src="./script.js"></script>
