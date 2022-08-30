@@ -1,5 +1,5 @@
 var mysql = require('mysql');
-
+//Secret details to sign into database
 const config = {
     db: {
         host: "localhost",
