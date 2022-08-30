@@ -17,34 +17,56 @@ app.get("/", (req, res) => {
 })
 
 
-app.get("/books", (req, res) => {
+app.get("/books", (req, res, next) => {
     db.query('SELECT * FROM book', (err, rows, fields) => {
-        if(err) res.status(500).send({message: "Database unavailable"});
+        if(err){
+            
+            next(err);
+
+        } 
         
         else res.send(rows);
     })
 } )
 
-app.get("/books/:id", (req, res) => {
-    db.query('SELECT * FROM book WHERE id = ?', [req.params.id], (err, rows, fields) => {
-        if(err) res.status(500).send({message: "Database unavailable"});
-        else res.send(rows);
-        
-    })
+app.get("/books/:id", (req, res, next) => {
+    if(verifyData(req.params.id)){
+        next(error = {
+            type : 'invalid-input'
+        })
+    }
+    else{
+        db.query('SELECT * FROM book WHERE id = ?', [req.params.id], (err, rows, fields) => {
+            if(err) {
+                next(err);
+            }
+            else if(Object.keys(rows).length === 0) next(error = {
+                type: 'user-not-found'
+            })
+            else{
+                res.send(rows);
+                return rows;
+            }
+            
+        })
+    }
 })
 
-app.post("/books", (req, res) => {
-
-
+app.post("/books", (req, res, next) => {
     const newBook = {
         book_name : req.body.book_name,
         book_type: req.body.book_type,
         book_genre: req.body.book_genre,
         book_completed: req.body.book_completed
     };
-
     db.query('INSERT INTO BOOK SET ? ', newBook, function(error, rows, fields){
-        if(error) res.status(400).send({message: "Invalid input"});
+        if(error && error.sqlMessage != undefined) {
+            error.type = 'invalid-input';
+            next(error);
+        }
+        else if(error){
+            next(error);
+        }
         else{
             res.send({message: "Insertion complete"});
         }
@@ -53,28 +75,56 @@ app.post("/books", (req, res) => {
 
 })
 
-app.put('/books/:id', (req, res) => {
+app.put('/books/:id', (req, res, next) => {
     const updatedBook = {
-        id : req.params.id,
         book_name : req.body.book_name,
         book_type : req.body.book_type,
         book_genre : req.body.book_genre,
         book_completed : req.body.book_completed
     }
-
-    db.query("UPDATE book SET ? WHERE id = ?", [updatedBook, updatedBook.id], function(error, rows, fields) {
-        if(error) res.status(400).send({message:"Invalid Input"});
-        else res.send({message: "Update Complete"});
-    })
+    if(verifyData(req.params.id)) next(error = {type: 'invalid-input'});
+    else{
+        db.query("UPDATE book SET ? WHERE EXISTS(SELECT * FROM book WHERE id = ?)", [updatedBook, req.params.id], function(error, rows, fields) {
+            if(error && error.sqlMessage != undefined) {
+                error.type = 'invalid-input';
+                next(error);
+            }
+            else if(error) next(error);
+            else res.send({message: "Update Complete"});
+        })
+    }
+    
 })
 
-app.delete('/books/:id', (req, res) => {
-    db.query("DELETE FROM book WHERE id = ?", req.params.id, function(error, rows, fields) {
-        if(error) res.status(500).send({message:"Database unavailable"});
-        else res.send("Book deleted");
-    })
+app.delete('/books/:id', (req, res, next) => {
+    if(verifyData(req.params.id)) next(error = {type: 'invalid-input'});
+    else{
+        db.query("DELETE FROM book WHERE id = ?", req.params.id, function(error, rows, fields) {
+        
+            if(error) next(error);
+            else res.send("Book deleted");
+        })
+    }
+    
 })
 
+function verifyData(data){
+    return (isNaN(data));
+}
+
+app.use((error, req, res, next) => {
+    // console.log("Error handler Middleware");
+    // console.log("Error type: " + error.type);
+    if(error.type == 'invalid-input'){
+        res.status(400).send({message: error.sqlMessage || "Invalid input for ID OR book creation"});
+    }
+    else if(error.type == 'user-not-found'){
+        res.status(404).send({message: "Book not found"});
+    }
+    else{
+        res.status(500).send({message: "Database not responding"});
+    }
+})
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => console.log('Listening on port: ' + port + '...'));
