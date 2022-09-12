@@ -152,7 +152,7 @@ app.delete('/books/:id', (req, res, next) => {
             //Check and handle error if thrown
             if(error) next(error);
             //Then notify the user if the deletion was a success
-            else res.send("Book deleted");
+            else res.send({message: "Book deleted"});
         })
     }
     
