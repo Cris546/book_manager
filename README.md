@@ -27,4 +27,4 @@ Current Repo: REST API built via Node.js
   <h2>PUT</h2><br>
   <img src="documentation/put.png" alt="PUT"><br>
   <h2>DELETE</h2><br>
-  <img src="documentation/delete.png" alt="DELETE><br>
+  <img src="documentation/delete.png" alt="DELETE"><br>
