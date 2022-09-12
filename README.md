@@ -4,24 +4,24 @@ A personal book manager to save and mark completed books. Built using Node and R
 Current Repo: REST API built via Node.js
 
 
--How to use:
-  -MySQL:
-    -Create a MySQL database using the credentials from the "config.js" file in the "REST_API" folder
-    -Note: Here's how the table schema looks like
+-How to use<br>:
+  -MySQL<br>:
+    -Create a MySQL database using the credentials from the "config.js" file in the "REST_API" folder<br>
+    -Note: Here's how the table schema looks like<br>
       -
-  -Node:
-    -Download the repo
-    -Run the command: "npm install" to download all dependencies
-    -Move yourself into the "REST_API" directory
-    -Run the command: "node server" to run the REST API
-    -The server will run on local host and will output what port it's running on
+  -Node<br>:
+    -Download the repo<br>
+    -Run the command: "npm install" to download all dependencies<br>
+    -Move yourself into the "REST_API" directory<br>
+    -Run the command: "node server" to run the REST API<br>
+    -The server will run on local host and will output what port it's running on<br>
     
     
--REST API Capabilities
-  -GET:
+-REST API Capabilities<br>
+  -GET:<br>
   
-  -POST:
+  -POST:<br>
   
-  -PUT:
+  -PUT:<br>
   
-  -DELETE:
+  -DELETE:<br>
